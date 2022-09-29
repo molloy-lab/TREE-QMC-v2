@@ -51,7 +51,7 @@ weight_t Graph::get_cut(std::vector<index_t> *A, std::vector<index_t> *B) {
         }
     }
     // std::cout << upper << std::endl;
-    while (lower + 0.1 < upper) {
+    while (lower + 0.01 < upper) {
         weight_t alpha = (lower + upper) / 2.0;
         a.clear(); b.clear();
         weight_t weight = sdp_cut(alpha, &a, &b);
