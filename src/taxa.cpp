@@ -18,6 +18,8 @@ Taxa::Taxa() {
 Taxa::Taxa(Dict *dict, char normal) {
     this->dict = dict;
     this->normal = normal;
+    index2node = new Node*[dict->max_size()];
+    std::memset(index2node, 0, sizeof(Node *) * dict->max_size());
     for (index_t i = 0; i < dict->size(); i ++) {
         Node *node = new Node(i);
         index2node[i] = node;
@@ -26,6 +28,34 @@ Taxa::Taxa(Dict *dict, char normal) {
     }
 }
 
+Taxa::Taxa(const Taxa &taxa) {
+    singletons = taxa.singletons;
+    normal = taxa.normal;
+    dict = taxa.dict;
+    index2node = new Node*[dict->max_size()];
+    std::memset(index2node, 0, sizeof(Node *) * dict->max_size());
+    for (index_t i = 0; i < dict->max_size(); i ++) {
+        if (taxa.index2node[i] == NULL) continue;
+        Node *new_node = new Node(i);
+        index2node[i] = new_node;
+        new_node->r_index = taxa.index2node[i]->r_index;
+        new_node->singleton = taxa.index2node[i]->singleton;
+    }
+    for (index_t i = 0; i < dict->max_size(); i ++) {
+        if (index2node[i] == NULL) continue;
+        Node *new_node = index2node[i];
+        if (taxa.index2node[i]->parent == NULL) 
+            new_node->parent = NULL;
+        else 
+            new_node->parent = index2node[taxa.index2node[i]->parent->index];
+    }
+    for (Node *root : taxa.roots) 
+        roots.push_back(index2node[root->index]);
+    for (Node *leaf : taxa.leaves) 
+        leaves.push_back(index2node[leaf->index]);
+}
+
+/*
 Taxa::Taxa(const Taxa &taxa) {
     singletons = taxa.singletons;
     normal = taxa.normal;
@@ -48,16 +78,18 @@ Taxa::Taxa(const Taxa &taxa) {
     for (Node *leaf : taxa.leaves) 
         leaves.push_back(index2node[leaf->index]);
 }
+*/
 
 Taxa::~Taxa() {
-    for (auto elem : index2node) {
-        delete elem.second;
+    for (index_t i = 0; i < dict->max_size(); i ++) {
+        if (index2node[i] != NULL) delete index2node[i];
     }
+    delete [] index2node;
 }
 
-void Taxa::struct_update(std::vector<index_t> &subset, index_t pseudo) {
-    Node *new_root = new Node(pseudo);
-    index2node[pseudo] = new_root;
+void Taxa::struct_update(std::vector<index_t> &subset, index_t artificial) {
+    Node *new_root = new Node(artificial);
+    index2node[artificial] = new_root;
     roots.push_back(new_root);
     new_root->singleton = false;
     for (index_t index : subset) {

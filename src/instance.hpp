@@ -21,5 +21,4 @@ class Instance {
         void input_trees();
 };
 
-
 #endif

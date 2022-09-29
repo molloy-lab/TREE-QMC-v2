@@ -3,23 +3,17 @@
 
 #include <algorithm>
 #include <chrono>
-#include <cmath>
-#include <cstdlib>
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <cstring>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 #include <iomanip>
-#include <thread>
-#include <mutex>
-#include <future>
-#include <cstring>
 #include <queue>
-#include <map>
 
 typedef int16_t index_t;
 typedef double weight_t;
@@ -34,7 +28,7 @@ class Matrix {
 
 const std::string help_info = 
 "=================================== TREE-QMC ===================================\n"
-"This is version 1.0.0 of TREe Embedded Quartet Max Cut (TREE-QMC).\n\n" 
+"This is version 2.0.0 of TREe Embedded Quartet Max Cut (TREE-QMC).\n\n" 
 "USAGE:\n"
 "./TREE-QMC (-i|--input) <input file> [(-o|--output) <output file>]\n"
 "           [(--polyseed) <integer>] [(--maxcutseed) <integer>]\n"

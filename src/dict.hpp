@@ -14,7 +14,7 @@ class Dict {
         }
 
         std::string index2label(index_t index) {
-            if (index < 0) 
+            if (index < 0 || index >= singletons) 
                 return std::to_string(index);
             return i2l[index];
         }
@@ -29,9 +29,19 @@ class Dict {
                 s += label + "->" + std::to_string(l2i[label]) + "\n";
             return s;
         }
+
+        void update_singletons() {
+            singletons = size();
+        }
+
+        index_t max_size() {
+            return singletons * 2 - 3;
+        }
+
     private:
         std::unordered_map<std::string, index_t> l2i;
         std::vector<std::string> i2l;
+        index_t singletons;
 };
 
 #endif

@@ -39,7 +39,6 @@
 /bin
 /.vscode
 /src/.vscode
-/MQLib
 
 *.tre
 *.bak

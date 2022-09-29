@@ -4,13 +4,19 @@
 
 SpeciesTree::SpeciesTree(std::vector<Tree *> &input, Dict *dict, std::string mode) {
     this->dict = dict;
+    this->artifinyms = dict->size() * 2 - 3;
     this->mode = mode;
     Taxa subset(dict, mode[0]);
     root = construct_stree(input, subset);
+    std::cout << artifinyms << std::endl;
 }
 
 SpeciesTree::~SpeciesTree() {
     
+}
+
+index_t SpeciesTree::artifinym() {
+    return -- artifinyms;
 }
 
 Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset) {
@@ -42,12 +48,12 @@ Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset) {
         std::vector<index_t> A, B;
         g->get_cut(&A, &B);
         Taxa subsetA(subset), subsetB(subset);
-        index_t pseudo = pseudonym();
-        subsetA.struct_update(A, pseudo);
-        subsetB.struct_update(B, pseudo);
+        index_t artificial = artifinym();
+        subsetA.struct_update(A, artificial);
+        subsetB.struct_update(B, artificial);
         root = new Node(pseudonym());
-        root->children.push_back(reroot_stree(construct_stree(input, subsetA), pseudo));
-        root->children.push_back(reroot_stree(construct_stree(input, subsetB), pseudo));
+        root->children.push_back(reroot_stree(construct_stree(input, subsetA), artificial));
+        root->children.push_back(reroot_stree(construct_stree(input, subsetB), artificial));
         root->children[0]->parent = root->children[1]->parent = root;
         delete g;
     }
@@ -85,8 +91,8 @@ Node *SpeciesTree::reroot(Node *root, std::unordered_set<index_t> &visited) {
     }
 }
 
-Node *SpeciesTree::reroot_stree(Node *root, index_t pseudo) {
-    Node *new_root = pseudo2node(root, pseudo);
+Node *SpeciesTree::reroot_stree(Node *root, index_t artificial) {
+    Node *new_root = artificial2node(root, artificial);
     std::unordered_set<index_t> visited;
     visited.insert(new_root->index);
     Node *new_tree = reroot(new_root, visited);
@@ -94,15 +100,15 @@ Node *SpeciesTree::reroot_stree(Node *root, index_t pseudo) {
     return new_tree;
 }
 
-Node *SpeciesTree::pseudo2node(Node *root, index_t pseudo) {
+Node *SpeciesTree::artificial2node(Node *root, index_t artificial) {
     if (root->children.size() == 0) {
-        if (root->index == pseudo) 
+        if (root->index == artificial) 
             return root;
         return NULL;
     }
     else {
         for (Node *child : root->children) {
-            Node *temp = pseudo2node(child, pseudo);
+            Node *temp = artificial2node(child, artificial);
             if (temp != NULL) return temp;
         }
         return NULL;

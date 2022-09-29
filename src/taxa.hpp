@@ -21,7 +21,7 @@ class Taxa {
         Taxa(Dict *dict, char normal);
         Taxa(const Taxa &taxa);
         ~Taxa();
-        void struct_update(std::vector<index_t> &subset, index_t pseudo);
+        void struct_update(std::vector<index_t> &subset, index_t artificial);
         void weight_update(std::unordered_map<index_t, index_t> &subset);
         std::string to_string();
         index_t size();
@@ -41,7 +41,8 @@ class Taxa {
         weight_t get_weight(Node *root);
     private:
         std::vector<Node *> leaves, roots;
-        std::unordered_map<index_t, Node*> index2node;
+        Node **index2node;
+        // std::unordered_map<index_t, Node*> index2node;
         Dict *dict;
         index_t singletons;
         char normal;

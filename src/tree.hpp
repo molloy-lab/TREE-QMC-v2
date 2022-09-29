@@ -65,11 +65,13 @@ class SpeciesTree : public Tree {
         SpeciesTree(std::vector<Tree *> &input, Dict *dict, std::string mode);
         ~SpeciesTree();
     private:
+        index_t artifinyms;
         std::string mode;
+        index_t artifinym();
         Node *construct_stree(std::vector<Tree *> &input, Taxa &subset);
         Node *reroot(Node *root, std::unordered_set<index_t> &visited);
-        Node *reroot_stree(Node *root, index_t pseudo);
-        Node *pseudo2node(Node *root, index_t pseudo);
+        Node *reroot_stree(Node *root, index_t artificial);
+        Node *artificial2node(Node *root, index_t artificial);
 };
 
 #endif
