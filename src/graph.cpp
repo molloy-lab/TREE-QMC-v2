@@ -42,7 +42,15 @@ std::string Graph::to_string() {
 weight_t Graph::get_cut(std::vector<index_t> *A, std::vector<index_t> *B) {
     weight_t positive_weight = -1.0;
     std::vector<index_t> a, b;
-    weight_t lower = 0.0, upper = 6.0;
+    weight_t lower = 0.0, upper = -1.0;
+    for (index_t i = 0; i < size; i ++) {
+        for (index_t j = i + 1; j < size; j ++) {
+            if (graph[1][i][j] == 0) continue;
+            weight_t ratio = graph[0][i][j] / graph[1][i][j];
+            if (ratio > upper) upper = ratio;
+        }
+    }
+    std::cout << upper << std::endl;
     while (lower + 0.1 < upper) {
         weight_t alpha = (lower + upper) / 2.0;
         a.clear(); b.clear();
