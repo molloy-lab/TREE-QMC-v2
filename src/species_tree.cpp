@@ -1,14 +1,13 @@
 #include "tree.hpp"
 #include "graph.hpp"
 
-
 SpeciesTree::SpeciesTree(std::vector<Tree *> &input, Dict *dict, std::string mode) {
     this->dict = dict;
     this->artifinyms = dict->size() * 2 - 3;
     this->mode = mode;
     Taxa subset(dict, mode[0]);
     root = construct_stree(input, subset);
-    std::cout << artifinyms << std::endl;
+    // std::cout << artifinyms << std::endl;
 }
 
 SpeciesTree::~SpeciesTree() {
@@ -57,7 +56,7 @@ Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset) {
         root->children[0]->parent = root->children[1]->parent = root;
         delete g;
     }
-    std::cout << display_tree(root) << std::endl;
+    // std::cout << display_tree(root) << std::endl;
     return root;
 }
 
