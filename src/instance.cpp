@@ -15,8 +15,10 @@ Instance::Instance(int argc, char **argv) {
         }
         else {
             dict = new Dict;
-            input_trees();
+            size_t total = input_trees();
+            std::cout << total << " fake nodes" << std::endl;
             dict->update_singletons();
+            if (total > 0) output_refined_trees();
         }
     }
 }
@@ -74,15 +76,24 @@ bool Instance::parse(int argc, char **argv) {
     return help;
 }
 
-void Instance::input_trees() {
+size_t Instance::input_trees() {
     srand(refine_seed);
     std::ifstream fin(input_file);
     std::string newick;
+    size_t total = 0;
     while (std::getline(fin, newick)) {
         if (newick.find(";") == std::string::npos) break;
         Tree *t = new Tree(newick, dict);
-        t->resolve();
+        total += t->resolve();
         input.push_back(t);
     }
     fin.close();
+    return total;
+}
+
+void Instance::output_refined_trees() {
+    std::ofstream fout(input_file + ".refined");
+    for (Tree *t : input) 
+        fout << t->to_string() << std::endl;
+    fout.close();
 }

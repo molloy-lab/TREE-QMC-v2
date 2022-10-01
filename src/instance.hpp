@@ -18,7 +18,8 @@ class Instance {
         Dict *dict;
         SpeciesTree *output;
         bool parse(int argc, char **argv);
-        void input_trees();
+        size_t input_trees();
+        void output_refined_trees();
 };
 
 #endif

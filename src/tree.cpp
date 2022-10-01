@@ -20,8 +20,8 @@ std::string Tree::to_string() {
     return display_tree(root) + ";";
 }
 
-void Tree::resolve() {
-    resolve_tree(root);
+size_t Tree::resolve() {
+    return resolve_tree(root);
 }
 
 index_t Tree::size() {
@@ -104,9 +104,10 @@ std::string Tree::display_tree(Node *root) {
     return s;
 }
 
-void Tree::resolve_tree(Node *root) {
+size_t Tree::resolve_tree(Node *root) {
+    size_t total = 0;
     for (index_t i = 0; i < root->children.size(); i ++) 
-        resolve_tree(root->children[i]);
+        total += resolve_tree(root->children[i]);
     while (root->children.size() > 2) {
         index_t i, j;
         do {
@@ -114,6 +115,7 @@ void Tree::resolve_tree(Node *root) {
             j = rand() % root->children.size();
         } while (j == i);
         Node *new_root = new Node(pseudonym());
+        total ++;
         index2node[new_root->index] = new_root;
         new_root->children.push_back(root->children[i]);
         new_root->children.push_back(root->children[j]);
@@ -123,6 +125,7 @@ void Tree::resolve_tree(Node *root) {
         root->children.push_back(new_root);
         new_root->parent = root;
     }
+    return total;
 }
 
 void Tree::clear_states(Node *root) {
