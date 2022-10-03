@@ -109,11 +109,8 @@ size_t Tree::resolve_tree(Node *root) {
     for (index_t i = 0; i < root->children.size(); i ++) 
         total += resolve_tree(root->children[i]);
     while (root->children.size() > 2) {
-        index_t i, j;
-        do {
-            i = rand() % root->children.size();
-            j = rand() % root->children.size();
-        } while (j == i);
+        index_t i = rand() % root->children.size(), j = i;
+        while (j == i) j = rand() % root->children.size();
         Node *new_root = new Node(pseudonym());
         total ++;
         index2node[new_root->index] = new_root;
