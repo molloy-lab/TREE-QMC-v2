@@ -42,7 +42,7 @@ std::string Graph::to_string() {
 weight_t Graph::get_cut(std::vector<index_t> *A, std::vector<index_t> *B) {
     weight_t positive_weight = -1.0;
     std::vector<index_t> a, b;
-    weight_t lower = 0.0, upper = 1.0;
+    weight_t lower = 0.0, upper = 0.1;
     for (index_t i = 0; i < size; i ++) {
         for (index_t j = i + 1; j < size; j ++) {
             if (graph[1][i][j] == 0) continue;
@@ -51,7 +51,7 @@ weight_t Graph::get_cut(std::vector<index_t> *A, std::vector<index_t> *B) {
         }
     }
     // std::cout << upper << std::endl;
-    while (lower + 0.01 < upper) {
+    while (lower + 0.001 < upper) {
         weight_t alpha = (lower + upper) / 2.0;
         a.clear(); b.clear();
         weight_t weight = sdp_cut(alpha, &a, &b);
@@ -79,7 +79,9 @@ weight_t Graph::sdp_cut(weight_t alpha, std::vector<index_t> *A, std::vector<ind
     weight_t avg = 0, num = size * (size - 1) / 2;
     for (index_t i = 0; i < size; i ++) {
         for (index_t j = i + 1; j < size; j ++) {
-            avg += fabs(graph[0][i][j] - alpha * graph[1][i][j]) / num;
+            weight_t temp = (graph[0][i][j] - alpha * graph[1][i][j]) / num;
+            if (temp < 0) temp = - temp;
+            avg += temp;
         }
     }
     */
