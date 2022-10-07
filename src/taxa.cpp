@@ -25,7 +25,6 @@ Taxa::Taxa(Dict *dict, char normal) {
         index2node[i] = node;
         roots.push_back(node);
         leaves.push_back(node);
-        node->singleton = true;
     }
 }
 
@@ -86,12 +85,7 @@ void Taxa::weight_update(std::unordered_map<index_t, index_t> &subset) {
             visited.insert(node);
             node->degree = subset[node->index];
             node->size = subset[node->index];
-            if (subset[node->index] != 1) 
-                node->singleton = false;
-            else if (node->parent == NULL) 
-                node->singleton = true;
-            else 
-                node->singleton = false;
+            node->singleton = subset[node->index] == 1 && node->parent == NULL;
         }
     }
     while (! queue.empty()) {
@@ -103,12 +97,9 @@ void Taxa::weight_update(std::unordered_map<index_t, index_t> &subset) {
                 visited.insert(head->parent);
                 head->parent->degree = 0;
                 head->parent->size = 0;
-                head->parent->singleton = true;
             }
             head->parent->degree += 1;
             head->parent->size += head->size;
-            if (head->parent->size > 1) 
-                head->parent->singleton = false;
         }
     }
     sort_taxa();

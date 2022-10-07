@@ -104,6 +104,16 @@ std::string Tree::display_tree(Node *root) {
     return s;
 }
 
+std::string Tree::display_tree_index(Node *root) {
+    if (root->children.size() == 0) 
+        return std::to_string(root->index);
+    std::string s = "(";
+    for (Node * node : root->children) 
+        s += display_tree_index(node) + ",";
+    s[s.size() - 1] = ')';
+    return s;
+}
+
 size_t Tree::resolve_tree(Node *root) {
     size_t total = 0;
     for (index_t i = 0; i < root->children.size(); i ++) 

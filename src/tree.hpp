@@ -41,6 +41,7 @@ class Tree {
         Dict *dict;
         index_t pseudonym();
         std::string display_tree(Node *root);
+        std::string display_tree_index(Node *root);
     private:
         index_t pseudonyms;
         std::unordered_map<index_t, index_t> indices;
