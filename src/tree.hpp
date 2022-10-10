@@ -16,7 +16,7 @@ class Node {
     private:
         Node *parent;
         std::vector<Node *> children;
-        index_t index, size;
+        index_t index, size, depth;
         weight_t /* **doublet, */ *singlet, s1, s2;
         // std::map<index_t, weight_t> doublet;
         std::vector<std::pair<index_t, weight_t>> *doublet;
@@ -35,6 +35,8 @@ class Tree {
         index_t size();
         std::unordered_map<index_t, index_t> &get_indices();
         weight_t ***build_graph(Taxa &subset);
+        void get_quartets(std::unordered_map<quartet_t, weight_t> *quartets);
+        std::string to_string(std::unordered_map<quartet_t, weight_t> &quartets);
     protected:
         Node *root;
         std::unordered_map<index_t, Node*> index2node;
@@ -59,6 +61,8 @@ class Tree {
         Node *build_subtree_from(Node *root);
         size_t resolve_tree(Node *root);
         void add_indices(Node *root, std::vector<index_t> &indices);
+        void get_leaves(Node *root, std::vector<Node *> *leaves);
+        void get_depth(Node *root, index_t depth);
 };
 
 class SpeciesTree : public Tree {
@@ -70,6 +74,7 @@ class SpeciesTree : public Tree {
         std::string mode;
         index_t artifinym();
         Node *construct_stree(std::vector<Tree *> &input, Taxa &subset);
+        Node *construct_stree(std::unordered_map<quartet_t, weight_t> &input, Taxa &subset);
         Node *reroot(Node *root, std::unordered_set<index_t> &visited);
         Node *reroot_stree(Node *root, index_t artificial);
         Node *artificial2node(Node *root, index_t artificial);

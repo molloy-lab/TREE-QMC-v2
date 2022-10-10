@@ -15,8 +15,11 @@
 #include <iomanip>
 #include <queue>
 
+#define INDEX_WIDTH 65536
+
 typedef int16_t index_t;
-typedef double weight_t;
+typedef float weight_t;
+typedef uint64_t quartet_t;
 
 class Matrix {
     public:
@@ -25,6 +28,9 @@ class Matrix {
         static std::string display_mat(weight_t **m, index_t size);
         static weight_t diff_mat(weight_t **m1, weight_t **m2, index_t size);
 };
+
+quartet_t join(index_t *quartet);
+index_t *split(quartet_t quartet);
 
 const std::string help_info = 
 "=================================== TREE-QMC ===================================\n"

@@ -11,6 +11,7 @@
 class Graph {
     public:
         Graph(std::vector<Tree *> trees, Taxa &subset);
+        Graph(std::unordered_map<quartet_t, weight_t> &quartets, Taxa &subset);
         ~Graph();
         std::string to_string();
         weight_t get_cut(std::vector<index_t> *A, std::vector<index_t> *B);

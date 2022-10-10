@@ -29,6 +29,27 @@ Graph::Graph(std::vector<Tree *> trees, Taxa &subset) {
     }
 }
 
+
+Graph::Graph(std::unordered_map<quartet_t, weight_t> &quartets, Taxa &subset) {
+    size = subset.size();
+    for (index_t i = 0; i < size; i ++) {
+        index2index[subset.root_at(i)] = i;
+        indices.push_back(subset.root_at(i));
+    }
+    graph = new weight_t**[2];
+    graph[0] = Matrix::new_mat(size);
+    graph[1] = Matrix::new_mat(size);
+    for (auto elem : quartets) {
+        index_t *indices = split(elem.first);
+        index_t a = index2index[indices[0]], b = index2index[indices[1]], c = index2index[indices[2]], d = index2index[indices[3]];
+        weight_t w = elem.second;
+        graph[1][a][b] += w; graph[1][c][d] += w; graph[1][b][a] += w; graph[1][d][c] += w;
+        graph[0][a][c] += w; graph[0][a][d] += w; graph[0][b][c] += w; graph[0][b][d] += w;
+        graph[0][c][a] += w; graph[0][d][a] += w; graph[0][c][b] += w; graph[0][d][b] += w;
+        delete [] indices;
+    }
+}
+
 Graph::~Graph() {
     Matrix::delete_mat(graph[0], size);
     Matrix::delete_mat(graph[1], size);
@@ -42,7 +63,8 @@ std::string Graph::to_string() {
 weight_t Graph::get_cut(std::vector<index_t> *A, std::vector<index_t> *B) {
     weight_t positive_weight = -1.0;
     std::vector<index_t> a, b;
-    weight_t lower = 0.0, upper = 0.1;
+    weight_t lower = 0.0, upper = 6.0;
+    /*
     for (index_t i = 0; i < size; i ++) {
         for (index_t j = i + 1; j < size; j ++) {
             if (graph[1][i][j] == 0) continue;
@@ -50,8 +72,9 @@ weight_t Graph::get_cut(std::vector<index_t> *A, std::vector<index_t> *B) {
             if (ratio > upper) upper = ratio;
         }
     }
+    */
     // std::cout << upper << std::endl;
-    while (lower + 0.001 < upper) {
+    while (lower + 0.1 < upper) {
         weight_t alpha = (lower + upper) / 2.0;
         a.clear(); b.clear();
         weight_t weight = sdp_cut(alpha, &a, &b);

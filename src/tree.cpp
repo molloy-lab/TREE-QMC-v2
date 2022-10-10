@@ -123,7 +123,6 @@ size_t Tree::resolve_tree(Node *root) {
         while (j == i) j = rand() % root->children.size();
         Node *new_root = new Node(pseudonym());
         total ++;
-        index2node[new_root->index] = new_root;
         new_root->children.push_back(root->children[i]);
         new_root->children.push_back(root->children[j]);
         root->children[i]->parent = root->children[j]->parent = new_root;
@@ -323,4 +322,71 @@ void Tree::good_edges(Node *root, Taxa &subset, weight_t ***graph) {
         }
         delete [] c;
     }
+}
+
+void Tree::get_quartets(std::unordered_map<quartet_t, weight_t> *quartets) {
+    std::vector<Node *> leaves;
+    get_leaves(root, &leaves);
+    get_depth(root, 0);
+    index_t idx[4], size = leaves.size();
+    for (idx[0] = 0         ; idx[0] < size; idx[0] ++) 
+    for (idx[1] = idx[0] + 1; idx[1] < size; idx[1] ++) 
+    for (idx[2] = idx[1] + 1; idx[2] < size; idx[2] ++) 
+    for (idx[3] = idx[2] + 1; idx[3] < size; idx[3] ++) {
+        Node *lowest = NULL, *nodes[4] = {NULL, NULL, NULL, NULL};
+        index_t lowest_count = 0;
+        for (index_t i = 0, k = 0; i < 4; i ++) {
+            for (index_t j = 0; j < i; j ++) {
+                Node *a = leaves[idx[i]], *b = leaves[idx[j]];
+                while (a->depth > b->depth) a = a->parent;
+                while (b->depth > a->depth) b = b->parent;
+                while (a != b) {a = a->parent; b = b->parent;}
+                if (lowest == NULL || a->depth > lowest->depth) {
+                    lowest = a;
+                    lowest_count = 0;
+                    nodes[0] = leaves[idx[i]];
+                    nodes[1] = leaves[idx[j]];
+                }
+                if (a == lowest) lowest_count ++;
+            }
+        }
+        if (lowest_count != 1) continue;
+        for (index_t i = 0; i < 4; i ++) {
+            if (leaves[idx[i]] != nodes[0] && leaves[idx[i]] != nodes[1]) 
+                nodes[(nodes[2] == NULL ? 2 : 3)] = leaves[idx[i]];
+        }
+        index_t indices[4];
+        for (index_t i = 0; i < 4; i ++) {
+            indices[i] = nodes[i]->index;
+        }
+        quartet_t quartet = join(indices);
+        if (quartets->find(quartet) == quartets->end()) 
+            (*quartets)[quartet] = 0;
+        (*quartets)[quartet] += 1;
+    }
+}
+
+std::string Tree::to_string(std::unordered_map<quartet_t, weight_t> &quartets) {
+    std::string s = "";
+    for (auto elem : quartets) {
+        index_t *indices = split(elem.first);
+        s += dict->index2label(indices[0]) + "," + dict->index2label(indices[1]) + "|";
+        s += dict->index2label(indices[2]) + "," + dict->index2label(indices[3]) + ":";
+        s += std::to_string(elem.second) + ";\n";
+        delete [] indices;
+    }
+    return s;
+}
+
+void Tree::get_leaves(Node *root, std::vector<Node *> *leaves) {
+    if (root->children.size() == 0) 
+        leaves->push_back(root);
+    for (Node *child : root->children) 
+        get_leaves(child, leaves);
+}
+
+void Tree::get_depth(Node *root, index_t depth) {
+    root->depth = depth;
+    for (Node *child : root->children) 
+        get_depth(child, depth + 1);
 }
