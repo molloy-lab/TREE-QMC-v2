@@ -98,7 +98,6 @@ weight_t Graph::get_cut(std::vector<index_t> *A, std::vector<index_t> *B) {
 
 weight_t Graph::sdp_cut(weight_t alpha, std::vector<index_t> *A, std::vector<index_t> *B) {
     std::vector<Instance::InstanceTuple> input;
-    /*
     weight_t avg = 0, num = size * (size - 1) / 2;
     for (index_t i = 0; i < size; i ++) {
         for (index_t j = i + 1; j < size; j ++) {
@@ -107,10 +106,9 @@ weight_t Graph::sdp_cut(weight_t alpha, std::vector<index_t> *A, std::vector<ind
             avg += temp;
         }
     }
-    */
     for (index_t i = 0; i < size; i ++) {
         for (index_t j = i + 1; j < size; j ++) {
-            weight_t weight = (graph[0][i][j] - alpha * graph[1][i][j]); // / avg;
+            weight_t weight = (graph[0][i][j] - alpha * graph[1][i][j]) / avg;
             input.push_back(Instance::InstanceTuple(std::make_pair(i + 1, j + 1), weight));
         }
     }
