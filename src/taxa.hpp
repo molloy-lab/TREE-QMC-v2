@@ -23,6 +23,7 @@ class Taxa {
         ~Taxa();
         void struct_update(std::vector<index_t> &subset, index_t artificial);
         void weight_update(std::unordered_map<index_t, index_t> &subset);
+        std::string to_list();
         std::string to_string();
         index_t size();
         char normalization();

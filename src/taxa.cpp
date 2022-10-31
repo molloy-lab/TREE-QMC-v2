@@ -105,6 +105,19 @@ void Taxa::weight_update(std::unordered_map<index_t, index_t> &subset) {
     sort_taxa();
 }
 
+std::string Taxa::to_list() {
+    std::string s = "";
+    std::vector<std::string> root_indices;
+    for (Node *root : roots) {
+        root_indices.push_back(dict->index2label(root->index));
+    }
+    std::sort(root_indices.begin(), root_indices.end());
+    for (std::string index : root_indices) {
+        s += index + " ";
+    }
+    return s + "\n";
+}
+
 std::string Taxa::to_string() {
     std::string s = "";
     for (Node *node : leaves) {
