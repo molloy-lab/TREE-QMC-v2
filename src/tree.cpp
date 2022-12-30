@@ -273,6 +273,7 @@ void Tree::good_edges(Node *root, Taxa &subset, weight_t ***graph) {
     std::unordered_set<index_t> valid;
     for (auto elem : tree_indices) 
         valid.insert(subset.root_index(elem.first));
+    if (valid.size() < 4) return ;
     if (subset.normalization() != '0') {
         weight_t *c = new weight_t[m + 1];
         for (index_t i = 0; i <= m; i ++) 
@@ -280,9 +281,6 @@ void Tree::good_edges(Node *root, Taxa &subset, weight_t ***graph) {
         c[0] -= 2;
         weight_t sum = Node::get_doublet(c, root->s1, root->s2, 0, 0);
         delete [] c;
-        if (subset.get_shared() == '1') {
-            sum = subset.get_sum();
-        }
         for (index_t i = 0; i < subset.size(); i ++) {
             if (valid.find(i) == valid.end()) continue;
             for (index_t j = 0; j < subset.size(); j ++) {
