@@ -280,6 +280,9 @@ void Tree::good_edges(Node *root, Taxa &subset, weight_t ***graph) {
         c[0] -= 2;
         weight_t sum = Node::get_doublet(c, root->s1, root->s2, 0, 0);
         delete [] c;
+        if (subset.get_shared() == '1') {
+            sum = subset.get_sum();
+        }
         for (index_t i = 0; i < subset.size(); i ++) {
             if (valid.find(i) == valid.end()) continue;
             for (index_t j = 0; j < subset.size(); j ++) {

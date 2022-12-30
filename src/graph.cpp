@@ -2,10 +2,13 @@
 
 Graph::Graph(std::vector<Tree *> trees, Taxa &subset) {
     size = subset.size();
+    //std::cout << subset.to_string() << std::endl;
     for (index_t i = 0; i < size; i ++) {
         index2index[subset.root_at(i)] = i;
         indices.push_back(subset.root_at(i));
+        // std::cout << subset.root_at(i) << " ";
     }
+    // std::cout << std::endl;
     graph = new weight_t**[2];
     graph[0] = Matrix::new_mat(size);
     graph[1] = Matrix::new_mat(size);
@@ -27,6 +30,7 @@ Graph::Graph(std::vector<Tree *> trees, Taxa &subset) {
         Matrix::delete_mat(subgraph[1], size);
         delete [] subgraph;
     }
+    // std::cout << subset.to_string() << std::endl;
 }
 
 
@@ -89,6 +93,7 @@ weight_t Graph::get_cut(std::vector<index_t> *A, std::vector<index_t> *B) {
         }
     }
     if (A->size() <= 1 || B->size() <= 1) {
+        std::cout << positive_weight << ' ' << lower << ' ' << upper << std::endl;
         std::cout << Matrix::display_mat(graph[0], size) << std::endl;
         std::cout << Matrix::display_mat(graph[1], size) << std::endl;
     }

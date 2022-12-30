@@ -13,12 +13,11 @@ class Taxa {
                 bool is_singleton();
             private:
                 Node *parent;
-                index_t index, r_index, size;
-                weight_t degree;
+                index_t index, r_index, size, degree;
                 bool singleton;
         };
         Taxa();
-        Taxa(Dict *dict, char normal);
+        Taxa(Dict *dict, std::string mode);
         Taxa(const Taxa &taxa);
         ~Taxa();
         void struct_update(std::vector<index_t> &subset, index_t artificial);
@@ -27,6 +26,8 @@ class Taxa {
         std::string to_string();
         index_t size();
         char normalization();
+        char get_shared();
+        weight_t get_sum();
         index_t singleton_taxa();
         index_t artificial_taxa();
         bool is_singleton(index_t index);
@@ -46,7 +47,8 @@ class Taxa {
         // std::unordered_map<index_t, Node*> index2node;
         Dict *dict;
         index_t singletons;
-        char normal;
+        std::string mode;
+        char normal, shared;
         void sort_taxa();
 };
 

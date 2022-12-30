@@ -15,9 +15,11 @@ Taxa::Taxa() {
 
 }
 
-Taxa::Taxa(Dict *dict, char normal) {
+Taxa::Taxa(Dict *dict, std::string mode) {
     this->dict = dict;
-    this->normal = normal;
+    this->mode = mode;
+    this->normal = mode[0];
+    this->shared = mode[3];
     index2node = new Node*[dict->max_size()];
     std::memset(index2node, 0, sizeof(Node *) * dict->max_size());
     for (index_t i = 0; i < dict->size(); i ++) {
@@ -30,7 +32,9 @@ Taxa::Taxa(Dict *dict, char normal) {
 
 Taxa::Taxa(const Taxa &taxa) {
     singletons = taxa.singletons;
+    mode = taxa.mode;
     normal = taxa.normal;
+    shared = taxa.shared;
     dict = taxa.dict;
     index2node = new Node*[dict->max_size()];
     std::memset(index2node, 0, sizeof(Node *) * dict->max_size());
@@ -77,32 +81,103 @@ void Taxa::struct_update(std::vector<index_t> &subset, index_t artificial) {
 }
 
 void Taxa::weight_update(std::unordered_map<index_t, index_t> &subset) {
-    std::queue<Node *> queue;
-    std::unordered_set<Node *> visited;
-    for (Node *node : leaves) {
-        if (subset.find(node->index) != subset.end()) {
-            queue.push(node);
-            visited.insert(node);
-            node->degree = subset[node->index];
-            node->size = subset[node->index];
-            node->singleton = subset[node->index] == 1 && node->parent == NULL;
+    if (shared == '1') {
+        for (Node *node : leaves) {
+            node->singleton = node->parent == NULL;
         }
-    }
-    while (! queue.empty()) {
-        Node *head = queue.front();
-        queue.pop();
-        if (head->parent != NULL) {
-            if (visited.find(head->parent) == visited.end()) {
-                queue.push(head->parent);
-                visited.insert(head->parent);
-                head->parent->degree = 0;
-                head->parent->size = 0;
+        if (normal == '1' || normal == '2') {
+            std::queue<Node *> queue;
+            std::unordered_set<Node *> visited;
+            for (Node *node : leaves) {
+                queue.push(node);
+                visited.insert(node);
+                node->degree = 1;
             }
-            head->parent->degree += 1;
-            head->parent->size += head->size;
+            while (! queue.empty()) {
+                Node *head = queue.front();
+                queue.pop();
+                if (head->parent != NULL) {
+                    if (visited.find(head->parent) == visited.end()) {
+                        queue.push(head->parent);
+                        visited.insert(head->parent);
+                        head->parent->degree = 0;
+                        head->parent->size = 0;
+                    }
+                    head->parent->degree += 1;
+                }
+            }
+            if (normal == '1') {
+                for (Node *node : leaves) {
+                    queue.push(node);
+                    node->size = 1.0;
+                }
+                while (! queue.empty()) {
+                    Node *head = queue.front();
+                    queue.pop();
+                    if (head->parent != NULL) {
+                        head->parent->degree -= 1;
+                        head->parent->size += head->size;
+                        if (head->parent->degree == 0) {
+                            queue.push(head->parent);
+                        }
+                    }
+                }
+            }
         }
+        sort_taxa();
+        // std::cout << to_string() << std::endl;
     }
-    sort_taxa();
+    else {
+        for (Node *node : leaves) {
+            if (subset.find(node->index) != subset.end()) {
+                node->singleton = subset[node->index] == 1 && node->parent == NULL;
+            }
+        }
+        if (normal == '1' || normal == '2') {
+            std::queue<Node *> queue;
+            std::unordered_set<Node *> visited;
+            for (Node *node : leaves) {
+                if (subset.find(node->index) != subset.end()) {
+                    queue.push(node);
+                    visited.insert(node);
+                    node->degree = subset[node->index];
+                }
+            }
+            while (! queue.empty()) {
+                Node *head = queue.front();
+                queue.pop();
+                if (head->parent != NULL) {
+                    if (visited.find(head->parent) == visited.end()) {
+                        queue.push(head->parent);
+                        visited.insert(head->parent);
+                        head->parent->degree = 0;
+                        head->parent->size = 0;
+                    }
+                    head->parent->degree += 1;
+                }
+            }
+            if (normal == '1') {
+                for (Node *node : leaves) {
+                    if (subset.find(node->index) != subset.end()) {
+                        queue.push(node);
+                        node->size = subset[node->index];
+                    }
+                }
+                while (! queue.empty()) {
+                    Node *head = queue.front();
+                    queue.pop();
+                    if (head->parent != NULL) {
+                        head->parent->degree -= 1;
+                        head->parent->size += head->size;
+                        if (head->parent->degree == 0) {
+                            queue.push(head->parent);
+                        }
+                    }
+                }
+            }
+        }
+        sort_taxa();
+    }
 }
 
 std::string Taxa::to_list() {
@@ -121,6 +196,7 @@ std::string Taxa::to_list() {
 std::string Taxa::to_string() {
     std::string s = "";
     for (Node *node : leaves) {
+        s += "(" + std::to_string(root_weight(node->index)) + ")";
         while (node != NULL) {
             s += std::to_string(node->index) + ":" + std::to_string(node->degree) + "," + std::to_string(node->size) + "," + std::to_string(node->singleton) + " ";
             node = node->parent;
@@ -139,6 +215,15 @@ index_t Taxa::size() {
 
 char Taxa::normalization() {
     return normal;
+}
+
+char Taxa::get_shared() {
+    return shared;
+}
+
+weight_t Taxa::get_sum() {
+    weight_t count = roots.size() - 2;
+    return (count - 1) * count;
 }
 
 bool Taxa::is_singleton(index_t index) {

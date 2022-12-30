@@ -2,7 +2,7 @@
 
 Instance::Instance(int argc, char **argv) {
     input_file = output_file = "";
-    normal = "2"; execute = "0"; verbose = "0";
+    normal = "2"; execute = "0"; verbose = "0"; taxa_mode = "0";
     refine_seed = 12345; cut_seed = 1;
     dict = NULL; output = NULL;
     if (parse(argc, argv)) {
@@ -34,7 +34,7 @@ long long Instance::solve() {
     }
     else {
         srand(cut_seed);
-        std::string mode = normal + execute + verbose;
+        std::string mode = normal + execute + verbose + taxa_mode;
         auto start = std::chrono::high_resolution_clock::now();
         output = new SpeciesTree(input, dict, mode);
         auto end = std::chrono::high_resolution_clock::now();
@@ -70,6 +70,7 @@ bool Instance::parse(int argc, char **argv) {
         if (opt == "-v" || opt == "--verbose") verbose = argv[++ i];
         if (opt == "--polyseed") refine_seed = std::stoi(argv[++ i]);
         if (opt == "--cutseed") cut_seed = std::stoi(argv[++ i]);
+        if (opt == "--shared") taxa_mode = "1";
         i ++;
     }
     return help;

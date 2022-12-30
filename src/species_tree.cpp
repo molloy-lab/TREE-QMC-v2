@@ -5,7 +5,7 @@ SpeciesTree::SpeciesTree(std::vector<Tree *> &input, Dict *dict, std::string mod
     this->dict = dict;
     this->artifinyms = dict->max_size();
     this->mode = mode;
-    Taxa subset(dict, mode[0]);
+    Taxa subset(dict, mode);
     switch (mode[1]) {
         case '0': {
             root = construct_stree(input, subset);
