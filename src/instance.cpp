@@ -58,7 +58,7 @@ void Instance::output_solution() {
 }
 
 bool Instance::parse(int argc, char **argv) {
-    std::cout << "command: ";
+    std::cout << "TREE-QMC version 2.0.0\nCOMMAND: ";
     for (int j = 0; j < argc; j ++) 
         std::cout << argv[j] << " ";
     std::cout << std::endl;
