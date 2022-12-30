@@ -58,6 +58,10 @@ void Instance::output_solution() {
 }
 
 bool Instance::parse(int argc, char **argv) {
+    std::cout << "command: ";
+    for (int j = 0; j < argc; j ++) 
+        std::cout << argv[j] << " ";
+    std::cout << std::endl;
     int i = 0;
     bool help = false;
     while (i < argc) {
