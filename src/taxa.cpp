@@ -204,7 +204,7 @@ std::string Taxa::to_string() {
         s += "\n";
     }
     for (Node *root : roots) {
-        s += std::to_string(root->index) + ":" + std::to_string(root->degree) + "," + std::to_string(root->size) + "," + std::to_string(root->singleton) + " ";
+        s += dict->index2label(root->index) + "/" + std::to_string(root->index) + ":" + std::to_string(root->degree) + "," + std::to_string(root->size) + "," + std::to_string(root->singleton) + " ";
     }
     return s + "\n";
 }

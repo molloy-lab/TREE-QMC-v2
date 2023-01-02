@@ -66,15 +66,25 @@ Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset) {
     else {
         Graph *g = new Graph(input, subset);
         std::vector<index_t> A, B;
-        g->get_cut(&A, &B);
-        Taxa subsetA(subset), subsetB(subset);
-        index_t artificial = artifinym();
-        subsetA.struct_update(A, artificial);
-        subsetB.struct_update(B, artificial);
-        root = new Node(pseudonym());
-        root->children.push_back(reroot_stree(construct_stree(input, subsetA), artificial));
-        root->children.push_back(reroot_stree(construct_stree(input, subsetB), artificial));
-        root->children[0]->parent = root->children[1]->parent = root;
+        weight_t max = g->get_cut(&A, &B);
+        if (max < 0) {
+            root = new Node(pseudonym());
+            for (index_t i = 0; i < subset.size(); i ++) {
+                Node *child = new Node(subset.root_at(i));
+                root->children.push_back(child);
+                child->parent = root;
+            }
+        }
+        else {
+            Taxa subsetA(subset), subsetB(subset);
+            index_t artificial = artifinym();
+            subsetA.struct_update(A, artificial);
+            subsetB.struct_update(B, artificial);
+            root = new Node(pseudonym());
+            root->children.push_back(reroot_stree(construct_stree(input, subsetA), artificial));
+            root->children.push_back(reroot_stree(construct_stree(input, subsetB), artificial));
+            root->children[0]->parent = root->children[1]->parent = root;
+        }
         delete g;
     }
     // std::cout << display_tree(root) << std::endl;
@@ -188,8 +198,9 @@ Node *SpeciesTree::reroot(Node *root, std::unordered_set<index_t> &visited) {
             child.push_back(reroot(ch, visited));
         }
     }
+    Node *new_root;
     if (child.size() >= 2) {
-        Node *new_root = new Node(pseudonym());
+        new_root = new Node(pseudonym());
         visited.insert(new_root->index);
         for (Node *ch : child) {
             new_root->children.push_back(ch);
@@ -198,12 +209,13 @@ Node *SpeciesTree::reroot(Node *root, std::unordered_set<index_t> &visited) {
         return new_root;
     }
     else if (child.size() == 1) {
-        return child[0];
+        new_root = child[0];
     }
     else {
-        Node *new_root = new Node(root->index);
-        return new_root;
+        new_root = new Node(root->index);
     }
+    // std::cout << '>' << display_tree(new_root) << std::endl;
+    return new_root;
 }
 
 Node *SpeciesTree::reroot_stree(Node *root, index_t artificial) {

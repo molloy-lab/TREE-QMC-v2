@@ -30,7 +30,7 @@ Graph::Graph(std::vector<Tree *> trees, Taxa &subset) {
         Matrix::delete_mat(subgraph[1], size);
         delete [] subgraph;
     }
-    // std::cout << subset.to_string() << std::endl;
+    //std::cout << subset.to_string() << std::endl;
 }
 
 
@@ -52,6 +52,7 @@ Graph::Graph(std::unordered_map<quartet_t, weight_t> &quartets, Taxa &subset) {
         graph[0][c][a] += w; graph[0][d][a] += w; graph[0][c][b] += w; graph[0][d][b] += w;
         delete [] indices;
     }
+    std::cout << subset.to_string() << std::endl;
 }
 
 Graph::~Graph() {
@@ -92,12 +93,13 @@ weight_t Graph::get_cut(std::vector<index_t> *A, std::vector<index_t> *B) {
             *B = b;
         }
     }
+    /*
     if (A->size() <= 1 || B->size() <= 1) {
-        std::cout << positive_weight << ' ' << lower << ' ' << upper << std::endl;
         std::cout << Matrix::display_mat(graph[0], size) << std::endl;
         std::cout << Matrix::display_mat(graph[1], size) << std::endl;
     }
     assert(A->size() > 1 && B->size() > 1);
+    */
     return positive_weight;
 }
 

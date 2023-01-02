@@ -21,7 +21,10 @@ std::string Tree::to_string() {
 }
 
 size_t Tree::resolve() {
-    return resolve_tree(root);
+    bool flag = root->children.size() == 3;
+    size_t count = resolve_tree(root);
+    if (flag) count -= 1;
+    return count;
 }
 
 index_t Tree::size() {
