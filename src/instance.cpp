@@ -16,8 +16,8 @@ Instance::Instance(int argc, char **argv) {
         else {
             dict = new Dict;
             input_trees();
-            if (execute == "0") resolve_trees();
             dict->update_singletons();
+            if (execute == "0") resolve_trees();
         }
     }
 }
