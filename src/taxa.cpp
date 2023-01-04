@@ -83,52 +83,54 @@ void Taxa::struct_update(std::vector<index_t> &subset, index_t artificial) {
 }
 
 void Taxa::weight_update(std::unordered_map<index_t, index_t> &subset) {
-    if (shared == '1' && ! updated) {
-        updated = true;
-        // std::cout << size() << std::endl;
-        for (Node *node : leaves) {
-            node->singleton = node->parent == NULL;
-        }
-        if (normal == '1' || normal == '2') {
-            std::queue<Node *> queue;
-            std::unordered_set<Node *> visited;
+    if (shared == '1') {
+        if (! updated) {
+            updated = true;
+            // std::cout << size() << std::endl;
             for (Node *node : leaves) {
-                queue.push(node);
-                visited.insert(node);
-                node->degree = 1;
+                node->singleton = node->parent == NULL;
             }
-            while (! queue.empty()) {
-                Node *head = queue.front();
-                queue.pop();
-                if (head->parent != NULL) {
-                    if (visited.find(head->parent) == visited.end()) {
-                        queue.push(head->parent);
-                        visited.insert(head->parent);
-                        head->parent->degree = 0;
-                        head->parent->size = 0;
-                    }
-                    head->parent->degree += 1;
-                }
-            }
-            if (normal == '1') {
+            if (normal == '1' || normal == '2') {
+                std::queue<Node *> queue;
+                std::unordered_set<Node *> visited;
                 for (Node *node : leaves) {
                     queue.push(node);
-                    node->size = 1.0;
+                    visited.insert(node);
+                    node->degree = 1;
                 }
                 while (! queue.empty()) {
                     Node *head = queue.front();
                     queue.pop();
                     if (head->parent != NULL) {
-                        head->parent->degree -= 1;
-                        head->parent->size += head->size;
-                        if (head->parent->degree == 0) {
+                        if (visited.find(head->parent) == visited.end()) {
                             queue.push(head->parent);
+                            visited.insert(head->parent);
+                            head->parent->degree = 0;
+                            head->parent->size = 0;
+                        }
+                        head->parent->degree += 1;
+                    }
+                }
+                if (normal == '1') {
+                    for (Node *node : leaves) {
+                        queue.push(node);
+                        node->size = 1.0;
+                    }
+                    while (! queue.empty()) {
+                        Node *head = queue.front();
+                        queue.pop();
+                        if (head->parent != NULL) {
+                            head->parent->degree -= 1;
+                            head->parent->size += head->size;
+                            if (head->parent->degree == 0) {
+                                queue.push(head->parent);
+                            }
                         }
                     }
                 }
             }
+            sort_taxa();
         }
-        sort_taxa();
     }
     else {
         for (Node *node : leaves) {
