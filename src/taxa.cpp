@@ -16,6 +16,7 @@ Taxa::Taxa() {
 }
 
 Taxa::Taxa(Dict *dict, std::string mode) {
+    this->updated = false;
     this->dict = dict;
     this->mode = mode;
     this->normal = mode[0];
@@ -31,6 +32,7 @@ Taxa::Taxa(Dict *dict, std::string mode) {
 }
 
 Taxa::Taxa(const Taxa &taxa) {
+    this->updated = false;
     singletons = taxa.singletons;
     mode = taxa.mode;
     normal = taxa.normal;
@@ -81,7 +83,9 @@ void Taxa::struct_update(std::vector<index_t> &subset, index_t artificial) {
 }
 
 void Taxa::weight_update(std::unordered_map<index_t, index_t> &subset) {
-    if (shared == '1') {
+    if (shared == '1' && ! updated) {
+        updated = true;
+        // std::cout << size() << std::endl;
         for (Node *node : leaves) {
             node->singleton = node->parent == NULL;
         }
@@ -125,7 +129,6 @@ void Taxa::weight_update(std::unordered_map<index_t, index_t> &subset) {
             }
         }
         sort_taxa();
-        // std::cout << to_string() << std::endl;
     }
     else {
         for (Node *node : leaves) {
@@ -190,7 +193,7 @@ std::string Taxa::to_list() {
     for (std::string index : root_indices) {
         s += index + " ";
     }
-    return s + "\n";
+    return s;
 }
 
 std::string Taxa::to_string() {

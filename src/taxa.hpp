@@ -49,6 +49,7 @@ class Taxa {
         index_t singletons;
         std::string mode;
         char normal, shared;
+        bool updated;
         void sort_taxa();
 };
 

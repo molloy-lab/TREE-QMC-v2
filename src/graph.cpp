@@ -1,17 +1,20 @@
 #include "graph.hpp"
 
+extern unsigned long long count[8];
+extern std::ofstream count_csv;
+
 Graph::Graph(std::vector<Tree *> trees, Taxa &subset) {
     size = subset.size();
-    //std::cout << subset.to_string() << std::endl;
     for (index_t i = 0; i < size; i ++) {
         index2index[subset.root_at(i)] = i;
         indices.push_back(subset.root_at(i));
-        // std::cout << subset.root_at(i) << " ";
     }
-    // std::cout << std::endl;
     graph = new weight_t**[2];
     graph[0] = Matrix::new_mat(size);
     graph[1] = Matrix::new_mat(size);
+    if (! PRUNING) {
+        count[0] = count[1] = count[2] = 0;
+    }
     for (Tree *tree : trees) {
         std::unordered_map<index_t, index_t> valid = tree->get_indices();
         subset.weight_update(valid);
@@ -30,9 +33,11 @@ Graph::Graph(std::vector<Tree *> trees, Taxa &subset) {
         Matrix::delete_mat(subgraph[1], size);
         delete [] subgraph;
     }
-    //std::cout << subset.to_string() << std::endl;
+    if (! PRUNING) {
+        count_csv << count[0] << ',' << count[1] << ',' << count[2] << ',';
+        count_csv << "\"" + subset.to_list() + "\"" << std::endl;
+    }
 }
-
 
 Graph::Graph(std::unordered_map<quartet_t, weight_t> &quartets, Taxa &subset) {
     size = subset.size();

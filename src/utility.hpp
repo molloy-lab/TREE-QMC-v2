@@ -16,6 +16,7 @@
 #include <queue>
 
 #define INDEX_WIDTH 65536
+#define PRUNING false
 
 typedef int16_t index_t;
 typedef float weight_t;
