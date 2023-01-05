@@ -20,7 +20,7 @@ Taxa::Taxa(Dict *dict, std::string mode) {
     this->dict = dict;
     this->mode = mode;
     this->normal = mode[0];
-    this->shared = mode[3];
+    this->shared = mode[2];
     index2node = new Node*[dict->max_size()];
     std::memset(index2node, 0, sizeof(Node *) * dict->max_size());
     for (index_t i = 0; i < dict->size(); i ++) {
