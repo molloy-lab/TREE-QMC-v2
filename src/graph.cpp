@@ -1,8 +1,5 @@
 #include "graph.hpp"
 
-extern unsigned long long count[8];
-extern std::ofstream count_csv;
-
 Graph::Graph(std::vector<Tree *> trees, Taxa &subset) {
     size = subset.size();
     for (index_t i = 0; i < size; i ++) {
@@ -12,9 +9,7 @@ Graph::Graph(std::vector<Tree *> trees, Taxa &subset) {
     graph = new weight_t**[2];
     graph[0] = Matrix::new_mat(size);
     graph[1] = Matrix::new_mat(size);
-    if (! PRUNING) {
-        count[0] = count[1] = count[2] = 0;
-    }
+    if (verbose > "1") count[1] = count[2] = count[3] = 0;
     for (Tree *tree : trees) {
         std::unordered_map<index_t, index_t> valid = tree->get_indices();
         subset.weight_update(valid);
@@ -33,10 +28,7 @@ Graph::Graph(std::vector<Tree *> trees, Taxa &subset) {
         Matrix::delete_mat(subgraph[1], size);
         delete [] subgraph;
     }
-    if (! PRUNING) {
-        count_csv << count[0] << ',' << count[1] << ',' << count[2] << ',';
-        count_csv << "\"" + subset.to_list() + "\"" << std::endl;
-    }
+    if (verbose > "1") subproblem_csv << ',' << count[1] << ',' << count[2] << ',' << count[3];
 }
 
 Graph::Graph(std::unordered_map<quartet_t, weight_t> &quartets, Taxa &subset) {
@@ -57,7 +49,6 @@ Graph::Graph(std::unordered_map<quartet_t, weight_t> &quartets, Taxa &subset) {
         graph[0][c][a] += w; graph[0][d][a] += w; graph[0][c][b] += w; graph[0][d][b] += w;
         delete [] indices;
     }
-    std::cout << subset.to_string() << std::endl;
 }
 
 Graph::~Graph() {

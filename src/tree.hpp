@@ -73,11 +73,15 @@ class SpeciesTree : public Tree {
         index_t artifinyms;
         std::string mode;
         index_t artifinym();
-        Node *construct_stree(std::vector<Tree *> &input, Taxa &subset);
-        Node *construct_stree(std::unordered_map<quartet_t, weight_t> &input, Taxa &subset);
+        Node *construct_stree(std::vector<Tree *> &input, Taxa &subset, index_t parent_pid, index_t depth);
+        Node *construct_stree(std::unordered_map<quartet_t, weight_t> &input, Taxa &subset, index_t parent_pid, index_t depth);
         Node *reroot(Node *root, std::unordered_set<index_t> &visited);
         Node *reroot_stree(Node *root, index_t artificial);
         Node *artificial2node(Node *root, index_t artificial);
 };
+
+extern std::ofstream subproblem_csv;
+extern std::string verbose;
+extern unsigned long long count[8];
 
 #endif

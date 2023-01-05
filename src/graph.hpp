@@ -23,4 +23,8 @@ class Graph {
         weight_t sdp_cut(weight_t alpha, std::vector<index_t> *A, std::vector<index_t> *B);
 };
 
+extern std::ofstream subproblem_csv;
+extern std::string verbose;
+extern unsigned long long count[8];
+
 #endif

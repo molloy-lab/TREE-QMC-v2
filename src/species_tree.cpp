@@ -8,7 +8,7 @@ SpeciesTree::SpeciesTree(std::vector<Tree *> &input, Dict *dict, std::string mod
     Taxa subset(dict, mode);
     switch (mode[1]) {
         case '0': {
-            root = construct_stree(input, subset);
+            root = construct_stree(input, subset, -1, 0);
             break;
         }
         case '1': {
@@ -18,7 +18,7 @@ SpeciesTree::SpeciesTree(std::vector<Tree *> &input, Dict *dict, std::string mod
             }
             // std::cout << to_string(quartets);
             // std::cout << quartets.size() << std::endl;
-            root = construct_stree(quartets, subset);
+            root = construct_stree(quartets, subset, -1, 0);
             break;
         }
         case '2': {
@@ -39,8 +39,11 @@ index_t SpeciesTree::artifinym() {
     return -- artifinyms;
 }
 
-Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset) {
-    index_t size = subset.size();
+Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset, index_t parent_pid, index_t depth) {
+    index_t size = subset.size(), pid = count[0] ++;
+    if (verbose > "0") subproblem_csv << pid << ',' << parent_pid << ',' << depth;
+    if (verbose > "0") subproblem_csv << ',' << subset.size() << ',' << subset.artificial_taxa();
+    if (verbose > "0") subproblem_csv << ',' << "\"" + subset.to_list() + "\"";
     Node *root;
     if (size < 4) {
         if (size == 1) {
@@ -62,9 +65,12 @@ Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset) {
             root->children.push_back(new Node(subset.root_at(2)));
             root->children[0]->parent = root->children[1]->parent = root;
         }
+        if (verbose > "0") subproblem_csv << std::endl;
     }
     else {
+        
         Graph *g = new Graph(input, subset);
+        if (verbose > "0") subproblem_csv << std::endl;
         std::vector<index_t> A, B;
         weight_t max = g->get_cut(&A, &B);
         if (max < 0) {
@@ -81,8 +87,8 @@ Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset) {
             subsetA.struct_update(A, artificial);
             subsetB.struct_update(B, artificial);
             root = new Node(pseudonym());
-            root->children.push_back(reroot_stree(construct_stree(input, subsetA), artificial));
-            root->children.push_back(reroot_stree(construct_stree(input, subsetB), artificial));
+            root->children.push_back(reroot_stree(construct_stree(input, subsetA, pid, depth + 1), artificial));
+            root->children.push_back(reroot_stree(construct_stree(input, subsetB, pid, depth + 1), artificial));
             root->children[0]->parent = root->children[1]->parent = root;
         }
         delete g;
@@ -91,8 +97,11 @@ Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset) {
     return root;
 }
 
-Node *SpeciesTree::construct_stree(std::unordered_map<quartet_t, weight_t> &quartets, Taxa &subset) {
-    index_t size = subset.size();
+Node *SpeciesTree::construct_stree(std::unordered_map<quartet_t, weight_t> &quartets, Taxa &subset, index_t parent_pid, index_t depth) {
+    index_t size = subset.size(), pid = count[0] ++;
+    if (verbose > "0") subproblem_csv << pid << ',' << parent_pid << ',' << depth;
+    if (verbose > "0") subproblem_csv << ',' << subset.size() << ',' << subset.artificial_taxa();
+    if (verbose > "0") subproblem_csv << ',' << "\"" + subset.to_list() + "\"";
     Node *root;
     if (size < 4) {
         if (size == 1) {
@@ -114,73 +123,85 @@ Node *SpeciesTree::construct_stree(std::unordered_map<quartet_t, weight_t> &quar
             root->children.push_back(new Node(subset.root_at(2)));
             root->children[0]->parent = root->children[1]->parent = root;
         }
+        if (verbose > "0") subproblem_csv << std::endl;
     }
     else {
+        if (verbose > "0") subproblem_csv << std::endl;
         // std::cout << to_string(quartets) << std::endl;
         Graph *g = new Graph(quartets, subset);
         std::vector<index_t> A, B;
-        g->get_cut(&A, &B);
-        std::unordered_set<index_t> setA(A.begin(), A.end()), setB(B.begin(), B.end());
-        Taxa subsetA(subset), subsetB(subset);
-        index_t artificial = artifinym();
-        subsetA.struct_update(B, artificial);
-        subsetB.struct_update(A, artificial);
-        root = new Node(pseudonym());
-        std::unordered_map<quartet_t, weight_t> quartetsA, quartetsB;
-        for (auto elem : quartets) {
-            index_t *indices = split(elem.first);
-            index_t count = 0;
-            for (index_t i = 0; i < 4; i ++) {
-                if (setA.find(indices[i]) != setA.end()) 
-                    count ++;
+        weight_t max = g->get_cut(&A, &B);
+        if (max < 0) {
+            root = new Node(pseudonym());
+            for (index_t i = 0; i < subset.size(); i ++) {
+                Node *child = new Node(subset.root_at(i));
+                root->children.push_back(child);
+                child->parent = root;
             }
-            switch (count) {
-                case 0: {
-                    if (quartetsB.find(elem.first) == quartetsB.end()) 
-                        quartetsB[elem.first] = 0;
-                    quartetsB[elem.first] += elem.second;
-                    break;
-                }
-                case 1: {
-                    for (index_t i = 0; i < 4; i ++) {
-                        if (setA.find(indices[i]) != setA.end()) {
-                            indices[i] = artificial;
-                        }
-                    }
-                    quartet_t temp = join(indices);
-                    if (quartetsB.find(temp) == quartetsB.end()) 
-                        quartetsB[temp] = 0;
-                    quartetsB[temp] += elem.second / A.size();
-                    break;
-                }
-                case 2: {
-                    break;
-                }
-                case 3: {
-                    for (index_t i = 0; i < 4; i ++) {
-                        if (setB.find(indices[i]) != setB.end()) {
-                            indices[i] = artificial;
-                        }
-                    }
-                    quartet_t temp = join(indices);
-                    if (quartetsA.find(temp) == quartetsA.end()) 
-                        quartetsA[temp] = 0;
-                    quartetsA[temp] += elem.second / B.size();
-                    break;
-                }
-                case 4: {
-                    if (quartetsA.find(elem.first) == quartetsA.end()) 
-                        quartetsA[elem.first] = 0;
-                    quartetsA[elem.first] += elem.second;
-                    break;
-                }
-            }
-            delete [] indices;
         }
-        root->children.push_back(reroot_stree(construct_stree(quartetsA, subsetA), artificial));
-        root->children.push_back(reroot_stree(construct_stree(quartetsB, subsetB), artificial));
-        root->children[0]->parent = root->children[1]->parent = root;
-        delete g;
+        else {
+            std::unordered_set<index_t> setA(A.begin(), A.end()), setB(B.begin(), B.end());
+            Taxa subsetA(subset), subsetB(subset);
+            index_t artificial = artifinym();
+            subsetA.struct_update(B, artificial);
+            subsetB.struct_update(A, artificial);
+            root = new Node(pseudonym());
+            std::unordered_map<quartet_t, weight_t> quartetsA, quartetsB;
+            for (auto elem : quartets) {
+                index_t *indices = split(elem.first);
+                index_t count = 0;
+                for (index_t i = 0; i < 4; i ++) {
+                    if (setA.find(indices[i]) != setA.end()) 
+                        count ++;
+                }
+                switch (count) {
+                    case 0: {
+                        if (quartetsB.find(elem.first) == quartetsB.end()) 
+                            quartetsB[elem.first] = 0;
+                        quartetsB[elem.first] += elem.second;
+                        break;
+                    }
+                    case 1: {
+                        for (index_t i = 0; i < 4; i ++) {
+                            if (setA.find(indices[i]) != setA.end()) {
+                                indices[i] = artificial;
+                            }
+                        }
+                        quartet_t temp = join(indices);
+                        if (quartetsB.find(temp) == quartetsB.end()) 
+                            quartetsB[temp] = 0;
+                        quartetsB[temp] += elem.second / A.size();
+                        break;
+                    }
+                    case 2: {
+                        break;
+                    }
+                    case 3: {
+                        for (index_t i = 0; i < 4; i ++) {
+                            if (setB.find(indices[i]) != setB.end()) {
+                                indices[i] = artificial;
+                            }
+                        }
+                        quartet_t temp = join(indices);
+                        if (quartetsA.find(temp) == quartetsA.end()) 
+                            quartetsA[temp] = 0;
+                        quartetsA[temp] += elem.second / B.size();
+                        break;
+                    }
+                    case 4: {
+                        if (quartetsA.find(elem.first) == quartetsA.end()) 
+                            quartetsA[elem.first] = 0;
+                        quartetsA[elem.first] += elem.second;
+                        break;
+                    }
+                }
+                delete [] indices;
+            }
+            root->children.push_back(reroot_stree(construct_stree(quartetsA, subsetA, pid, depth + 1), artificial));
+            root->children.push_back(reroot_stree(construct_stree(quartetsB, subsetB, pid, depth + 1), artificial));
+            root->children[0]->parent = root->children[1]->parent = root;
+            delete g;
+        }
     }
     std::cout << display_tree(root) << std::endl;
     return root;

@@ -26,9 +26,11 @@ Taxa::Taxa(Dict *dict, std::string mode) {
     for (index_t i = 0; i < dict->size(); i ++) {
         Node *node = new Node(i);
         index2node[i] = node;
+        node->singleton = true;
         roots.push_back(node);
         leaves.push_back(node);
     }
+    this->singletons = roots.size();
 }
 
 Taxa::Taxa(const Taxa &taxa) {

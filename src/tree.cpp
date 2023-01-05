@@ -197,19 +197,18 @@ weight_t Tree::aa_doublet(Node *root, index_t x, index_t y) {
     return root->doublet[x][y];
 }
 */
-extern unsigned long long count[8];
 
 weight_t Tree::aa_doublet(Node *root, index_t x, index_t y) {
     if (root->children.size() == 0) return 0;
     weight_t c0 = root->children[0]->singlet[x], c1 = root->children[1]->singlet[x], s0 = 0, s1 = 0;
     weight_t t0 = get_doublet(root->children[0], x, y, false), t1 = get_doublet(root->children[1], x, y, false);
-    if (! PRUNING || (c0 != 0 && t0 != 0)) s0 = aa_doublet(root->children[0], x, y);
-    if (! PRUNING || (c1 != 0 && t1 != 0)) s1 = aa_doublet(root->children[1], x, y);
+    if (verbose > "1" || (c0 != 0 && t0 != 0)) s0 = aa_doublet(root->children[0], x, y);
+    if (verbose > "1" || (c1 != 0 && t1 != 0)) s1 = aa_doublet(root->children[1], x, y);
     weight_t c = s0 + s1 + c0 * t1 + c1 * t0;
-    if (! PRUNING) {
-        count[0] ++; count[3] ++;
-        if (root->singlet[x] == 0 || get_doublet(root, x, y, false) == 0) {count[1] ++; count[4] ++;}
-        if (c < 1e-6) {count[2] ++; count[5] ++;}
+    if (verbose > "1") {
+        count[1] ++;
+        if (root->singlet[x] == 0 || get_doublet(root, x, y, false) == 0) count[2] ++;
+        if (c < 1e-9) count[3] ++;
     }
     root->add_doublet(x, y, c);
     return c;

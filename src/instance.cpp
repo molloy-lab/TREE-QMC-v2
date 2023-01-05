@@ -2,7 +2,7 @@
 
 Instance::Instance(int argc, char **argv) {
     input_file = output_file = "";
-    normal = "2"; execute = "0"; verbose = "0"; taxa_mode = "0";
+    normal = "2"; execute = "0"; taxa_mode = "0";
     refine_seed = 12345; cut_seed = 1;
     dict = NULL; output = NULL;
     if (parse(argc, argv)) {
@@ -14,6 +14,14 @@ Instance::Instance(int argc, char **argv) {
             std::cout << "use -h for more information" << std::endl;
         }
         else {
+            if (verbose > "0") {
+                subproblem_csv = std::ofstream("subproblems.csv", std::ofstream::out);
+                subproblem_csv << "ID,PARENT,DEPTH,SIZE,ARTIFICIAL,SUBSET";
+                if (verbose > "1") {
+                    subproblem_csv << ",ENTRY,PRUNED,ZERO";
+                }
+                subproblem_csv << std::endl;
+            }
             dict = new Dict;
             input_trees();
             dict->update_singletons();
@@ -34,7 +42,7 @@ long long Instance::solve() {
     }
     else {
         srand(cut_seed);
-        std::string mode = normal + execute + verbose + taxa_mode;
+        std::string mode = normal + execute + taxa_mode;
         auto start = std::chrono::high_resolution_clock::now();
         output = new SpeciesTree(input, dict, mode);
         auto end = std::chrono::high_resolution_clock::now();
