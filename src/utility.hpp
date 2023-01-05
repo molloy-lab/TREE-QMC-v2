@@ -86,7 +86,7 @@ const std::string help_info =
 "        -v 2: write CSV with subproblem information (info from v1 plus # of\n" 
 "              of elements in f, # of pruned elements in f, # of zeroes in f)\n"
 "[--shared <use shared taxon data structure to normalize quartet weights>]\n"
-"        Do NOT use unless there are no missing data!!!\n"
+"        Do NOT use unless there are no missing data!!!\n\n"
 "Contact: Post issue to Github (https://github.com/molloy-lab/TREE-QMC/)\n"
 "        or email Yunheng Han (yhhan@umd.edu) & Erin Molloy (ekmolloy@umd.edu)\n\n"
 "If you use TREE-QMC in your work, please cite:\n"
