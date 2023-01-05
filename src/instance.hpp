@@ -18,7 +18,7 @@ class Instance {
         Dict *dict;
         SpeciesTree *output;
         bool parse(int argc, char **argv);
-        void input_trees();
+        std::size_t input_trees();
         void resolve_trees();
 };
 

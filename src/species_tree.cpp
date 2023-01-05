@@ -8,7 +8,10 @@ SpeciesTree::SpeciesTree(std::vector<Tree *> &input, Dict *dict, std::string mod
     Taxa subset(dict, mode);
     switch (mode[1]) {
         case '0': {
+            std::cout << "At most " << subset.size() * 2 - 5 << " subproblems.\n";
             root = construct_stree(input, subset, -1, 0);
+            std::cout << "Computing subproblem:" << std::setw(5) << count[0] << std::endl << std::flush;
+            std::cout << std::setw(5) << count[0] << " subproblems computed.\n";
             break;
         }
         case '1': {
@@ -40,6 +43,9 @@ index_t SpeciesTree::artifinym() {
 }
 
 Node *SpeciesTree::construct_stree(std::vector<Tree *> &input, Taxa &subset, index_t parent_pid, index_t depth) {
+    if (count[0] % 10 == 0) std::cout << std::setw(5) << count[0] << " subproblems computed.\n";
+    std::cout << "Computing subproblem:" << std::setw(5) << count[0] << std::flush;
+    std::cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b";
     index_t size = subset.size(), pid = count[0] ++;
     if (verbose > "0") subproblem_csv << pid << ',' << parent_pid << ',' << depth;
     if (verbose > "0") subproblem_csv << ',' << subset.size() << ',' << subset.artificial_taxa();
@@ -203,7 +209,7 @@ Node *SpeciesTree::construct_stree(std::unordered_map<quartet_t, weight_t> &quar
             delete g;
         }
     }
-    std::cout << display_tree(root) << std::endl;
+    // std::cout << display_tree(root) << std::endl;
     return root;
 }
 
