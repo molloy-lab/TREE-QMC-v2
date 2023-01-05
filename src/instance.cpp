@@ -15,7 +15,7 @@ Instance::Instance(int argc, char **argv) {
         }
         else {
             if (verbose > "0") {
-                subproblem_csv = std::ofstream("subproblems.csv", std::ofstream::out);
+                subproblem_csv.open("subproblems.csv");
                 subproblem_csv << "ID,PARENT,DEPTH,SIZE,ARTIFICIAL,SUBSET";
                 if (verbose > "1") {
                     subproblem_csv << ",ENTRY,PRUNED,ZERO";
