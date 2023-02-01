@@ -8,7 +8,7 @@ The TREE-QMC method was originally presented in "TREE-QMC: Improving quartet gra
 
 To build, TREE-QMC use commands:
 ```
-git clone https://github.com/yhhan19/TREE-QMC.git
+git clone https://github.com/molloy-lab/TREE-QMC.git
 cd TREE-QMC/MQLib
 make
 cd ..
