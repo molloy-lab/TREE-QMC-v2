@@ -90,9 +90,9 @@ const std::string help_info =
 "Contact: Post issue to Github (https://github.com/molloy-lab/TREE-QMC/)\n"
 "        or email Yunheng Han (yhhan@umd.edu) & Erin Molloy (ekmolloy@umd.edu)\n\n"
 "If you use TREE-QMC in your work, please cite:\n"
-"  Han and Molloy, 2022, \"TREE-QMC: Improving quartet graph construction for\n"
-"  scalable and accurate species tree estimation from gene trees,\" bioRxiv,\n"
-"  https://doi.org/10.1101/2022.06.25.497608.\n"
+"  Han and Molloy, 2023, \"Improving quartet graph construction for scalable\n"
+"  and accurate species tree estimation from gene trees,\" Genome Research,\n"
+"  http:doi.org/10.1101/gr.277629.122.\n"
 "================================================================================\n\n";
 
 #endif
