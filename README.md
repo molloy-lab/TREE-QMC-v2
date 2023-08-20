@@ -1,10 +1,16 @@
 TREE-QMC
---------
+========
 
-This repository corresponds to the latest version of TREE-QMC. A preprint will be available in the near future with details.
+TREE-QMC is a quartet-based method for estimating species trees from gene trees. The input/output are the same as the popular method ASTRAL. To learn more about TREE-QMC, check out the related [paper](http:doi.org/10.1101/gr.277629.122) in *Genome Research* and [abstract](https://link.springer.com/book/10.1007/978-3-031-29119-7) in the *RECOMB 2023 proceedings*.
 
-The TREE-QMC method was originally presented in "TREE-QMC: Improving quartet graph construction for scalable and accurate species tree estimation from gene trees". This work has been accepted to [RECOMB 2023](http://recomb2023.bilkent.edu.tr/program.html) and is available on [bioRxiv](https://doi.org/10.1101/2022.06.25.497608). The original code (version 1) is available at [this Github repository](https://github.com/molloy-lab/TREE-QMC-v1).
+Note that this repository corresponds to the latest version of TREE-QMC (version 2). A preprint will be available in the near future with details. Note that the original code (version 1) is available at [this Github repository](https://github.com/molloy-lab/TREE-QMC-v1).
 
+Acknowledgements
+-----------------
+TREE-QMC builds upon the algorithmic framework work introduced by Sagi Snir and Satish Rao; see [this *IEEE/ACM TCBB* paper](http:doi.org/10.1109/TCBB.2008.133) as well as [this *Systematic Biology* paper](http:doi.org/10.1093/sysbio/syu087).
+
+Usage
+-----
 
 To build, TREE-QMC use commands:
 ```
@@ -89,8 +95,8 @@ Contact: Post issue to Github (https://github.com/molloy-lab/TREE-QMC/)
         or email Yunheng Han (yhhan@umd.edu) & Erin Molloy (ekmolloy@umd.edu)
 
 If you use TREE-QMC in your work, please cite:
-  Han and Molloy, 2022, "TREE-QMC: Improving quartet graph construction for
-  scalable and accurate species tree estimation from gene trees," bioRxiv,
-  https://doi.org/10.1101/2022.06.25.497608.
+  Han and Molloy, 2023, "Improving quartet graph construction for scalable
+  and accurate species tree estimation from gene trees," Genome Research,
+  http:doi.org/10.1101/gr.277629.122.
 ================================================================================
 ```
