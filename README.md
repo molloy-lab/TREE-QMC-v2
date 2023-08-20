@@ -7,7 +7,9 @@ Note that this repository corresponds to the latest version of TREE-QMC (version
 
 Acknowledgements
 -----------------
-TREE-QMC builds upon the algorithmic framework work introduced by Sagi Snir and Satish Rao; see [this *IEEE/ACM TCBB* paper](http:doi.org/10.1109/TCBB.2008.133) as well as [this *Systematic Biology* paper](http:doi.org/10.1093/sysbio/syu087).
+The TREE-QMC algorithm builds upon the framework work originally introduced by Sagi Snir and Satish Rao; see [this *IEEE/ACM TCBB* paper](http:doi.org/10.1109/TCBB.2008.133) as well as [this *Systematic Biology* paper](http:doi.org/10.1093/sysbio/syu087).
+
+Our implementation of TREE-QMC relies on [MQLib](https://github.com/MQLib/MQLib); see [this paper](https://doi.org/10.1287/ijoc.2017.0798) in *INFORMS Journal on Computing*.
 
 Usage
 -----
