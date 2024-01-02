@@ -8,6 +8,10 @@ TREE-QMC is based on the Quartet Max Cut (QMC) framework introduced by Sagi Snir
 
 TREE-QMC uses [MQLib](https://github.com/MQLib/MQLib) for its max cut heuristic; see [Dunning, Gupta, & Silberholz, *INFORMS Journal on Computing*, 2018](https://doi.org/10.1287/ijoc.2017.0798).
 
+Tutorial
+--------
+We recommend working through [this tutorial](tutorial/README.md). 
+
 Build
 -----
 To build, TREE-QMC use commands:
@@ -26,7 +30,8 @@ To run TREE-QMC, use command:
 ```
 ./TREE-QMC -i <input file> -o <output file name>
 ```
-See [this tutorial](tutorial/README.md) for more information. Also, check out the TREE-QMC usage options with this command:
+
+To see the TREE-QMC usage options, use this command:
 ```
 ./TREE-QMC -h
 ```
