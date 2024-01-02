@@ -1,6 +1,6 @@
 TREE-QMC
 ========
-TREE-QMC is a quartet-based method for estimating species trees from gene trees, like the popular method [ASTRAL](https://doi.org/10.1186/s12859-018-2129-y). To learn more, check out [Han & Molloy, *Genome Res*, 2023](http:doi.org/10.1101/gr.277629.122).
+TREE-QMC is a quartet-based method for estimating species trees from gene trees, like the popular method [ASTRAL](https://doi.org/10.1186/s12859-018-2129-y). To learn more about TREE-QMC, check out [Han & Molloy, *Genome Res*, 2023](http:doi.org/10.1101/gr.277629.122).
 
 Acknowledgements
 ----------------
@@ -14,7 +14,7 @@ We recommend working through [this tutorial](tutorial/README.md).
 
 Build
 -----
-To build, TREE-QMC use commands:
+To build TREE-QMC, use commands:
 ```
 git clone https://github.com/molloy-lab/TREE-QMC.git
 cd TREE-QMC
@@ -31,7 +31,7 @@ To run TREE-QMC, use command:
 ./TREE-QMC -i <input file> -o <output file name>
 ```
 
-To see the TREE-QMC usage options, use this command:
+To see the TREE-QMC usage options, use command:
 ```
 ./TREE-QMC -h
 ```
