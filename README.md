@@ -1,33 +1,32 @@
 TREE-QMC
 ========
-
-TREE-QMC is a quartet-based method for estimating species trees from gene trees. The input/output are the same as the popular method ASTRAL. To learn more about TREE-QMC, check out the related [paper](http:doi.org/10.1101/gr.277629.122) in *Genome Research* and [abstract](https://link.springer.com/book/10.1007/978-3-031-29119-7) in the *RECOMB 2023 proceedings*.
-
-Note that this repository corresponds to the latest version of TREE-QMC (version 2). A preprint will be available in the near future with details. Note that the original code (version 1) is available at [this Github repository](https://github.com/molloy-lab/TREE-QMC-v1).
+TREE-QMC is a quartet-based method for estimating species trees from gene trees, like the popular method [ASTRAL](https://doi.org/10.1186/s12859-018-2129-y). To learn more, check out [Han & Molloy, *Genome Res*, 2023](http:doi.org/10.1101/gr.277629.122).
 
 Acknowledgements
------------------
-The TREE-QMC algorithm builds upon the framework work originally introduced by Sagi Snir and Satish Rao; see [this *IEEE/ACM TCBB* paper](http:doi.org/10.1109/TCBB.2008.133) as well as [this *Systematic Biology* paper](http:doi.org/10.1093/sysbio/syu087).
+----------------
+TREE-QMC is based on the Quartet Max Cut (QMC) framework introduced by Sagi Snir and Satish Rao; see [Snir & Rao, *IEEE/ACM TCBB*, 2010](http:doi.org/10.1109/TCBB.2008.133) and [Avni, Cohen, & Snir, *Syst Biol*, 2015](http:doi.org/10.1093/sysbio/syu087).
 
-Our implementation of TREE-QMC relies on [MQLib](https://github.com/MQLib/MQLib); see [this paper](https://doi.org/10.1287/ijoc.2017.0798) in *INFORMS Journal on Computing*.
+TREE-QMC uses [MQLib](https://github.com/MQLib/MQLib) for its max cut heuristic; see [Dunning, Gupta, & Silberholz, *INFORMS Journal on Computing*, 2018](https://doi.org/10.1287/ijoc.2017.0798).
 
-Usage
+Build
 -----
-
 To build, TREE-QMC use commands:
 ```
 git clone https://github.com/molloy-lab/TREE-QMC.git
-cd TREE-QMC/MQLib
+cd TREE-QMC
+cd MQLib
 make
 cd ..
 g++ -std=c++11 -O2 -I MQLib/include -o TREE-QMC src/*.cpp MQLib/bin/MQLib.a
 ```
 
+Usage
+-----
 To run TREE-QMC, use command:
 ```
 ./TREE-QMC -i <input file> -o <output file name>
 ```
-See [this tutorial](example/tutorial.md) for more information. Also, check out the TREE-QMC usage options with this command:
+See [this tutorial](tutorial/README.md) for more information. Also, check out the TREE-QMC usage options with this command:
 ```
 ./TREE-QMC -h
 ```
