@@ -1,3 +1,11 @@
+We **recommend** using [weighted TREE-QMC](https://github.com/molloy-lab/weighted-TREE-QMC) so that you can advantage of the quartet weighting options proposed by [Zhang & Mirarab, Mol Biol Evol, 2022](https://doi.org/10.1093/molbev/msac215). The weighted TREE-QMC repository also includes the algorithm for unweighted quartets (from this respository) - just use the following command:
+
+```
+./wTREE-QMC -w f -i <input gene trees> -o <output species tree>
+```
+
+---
+
 TREE-QMC
 ========
 TREE-QMC is a quartet-based method for estimating species trees from gene trees, like the popular method [ASTRAL](https://doi.org/10.1186/s12859-018-2129-y). To learn more about TREE-QMC, check out [Han & Molloy, *Genome Res*, 2023](http:doi.org/10.1101/gr.277629.122).
