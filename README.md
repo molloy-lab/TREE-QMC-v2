@@ -1,7 +1,9 @@
-We **recommend** using [weighted TREE-QMC](https://github.com/molloy-lab/weighted-TREE-QMC) so that you can advantage of the quartet weighting options proposed by [Zhang & Mirarab, Mol Biol Evol, 2022](https://doi.org/10.1093/molbev/msac215). The weighted TREE-QMC repository also includes the algorithm for unweighted quartets (from this respository) - just use the following command:
+STOP: 
+-----
+We **recommend** using the latest version of [TREE-QMC](https://github.com/molloy-lab/TREE-QMC) so that you can advantage of the quartet weighting options proposed by [Zhang & Mirarab, Mol Biol Evol, 2022](https://doi.org/10.1093/molbev/msac215). The original algorithm for unweighted quartets can also be called from the latest TREE-QMC method using the following command:
 
 ```
-./wTREE-QMC -w f -i <input gene trees> -o <output species tree>
+./treeqmc --fast -i <input gene trees> -o <output species tree>
 ```
 
 ---
